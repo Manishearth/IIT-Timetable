@@ -81,6 +81,7 @@ function slotexpand(slotnames){
 
 function updatePerma(){
 	$('#perma').attr('href','?data='+encodeURIComponent(JSON.stringify(courses))+"&slots="+$('#snametog').hasClass('active'));
+	return $('#perma').attr('href');
 }
  function showSlot(slotname,use){
 	 $('.slot-'+slotname).show();
@@ -121,6 +122,11 @@ function updatePerma(){
     result[item[0]] = item[1];
   }
   return result;
+}
+
+function printable(){
+	history.pushState({},"",updatePerma())
+	$('body').html($('.maintbl').parent().html())
 }
 
  </script>
@@ -183,9 +189,10 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 			<span class="input-group-addon"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip"  id="helpicon"></i></span>
 			<input type=text class="form-control" id=cslots placeholder="Slots"/>
 		</div></div>
-		<div class="col-md-2 column"><input type=text class="form-control" id=cvenue placeholder="Venue"/> </i></div>
+		<div class="col-md-1 column"><input type=text class="form-control" id=cvenue placeholder="Venue"/> </i></div>
 		<div class="col-md-1 column"><button class="btn btn-primary" onclick="addCourse($('#ccode').val(),$('#cslots').val(),$('#cvenue').val())">Add</button></div>
 		<div class="col-md-2 column"><button class="btn btn-default togglebtn active" id=snametog onclick="toggleSlot()">Hide slot names</button></div>
+		<div class="col-md-2 column"><button class="btn btn-default "  onclick="printable()">Printable</button></div>
 		<div class="col-md-1 column"><a class="btn btn-default" id=perma href>Permalink</a></div>
 		</div>
 		<div class="row">&nbsp;</div> 
