@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Timetable creator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
+	<!--script src="js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+ <style>
+ .tm{font-size:8pt;width:auto;text-align:center;
+    white-space: nowrap; padding:0px !important; }
+    .maintbl td{vertical-align:middle !important; text-align:center;}
+  .table>tfoot>tr>td.tm{padding:0px;}
+  th{text-align:center; width:0px;padding:0px;}
+  .structtd{width:0%;padding:0px !important; border:0px;}
+ </style>
+ <script type="text/javascript">
+	 courses={};
+function slotexpand(slotnames){
+	var finalslots=[];
+	var slotlist=slotnames.split(/[;,]/ig);
+	for (i in slotlist){
+		var currslot=slotlist[i];
+		switch (currslot){
+			case "1":
+			case "2":
+			case "3":
+			case "4":
+				finalslots=finalslots.concat([currslot+"A",currslot+"B",currslot+"C"]);
+				break;
+			case "5":
+			case "6":
+			case "8":
+			case "9":
+			case "10":
+			case "11":
+			case "12":
+			case "13":
+			case "14":
+			case "15":
+				finalslots=finalslots.concat([currslot+"A",currslot+"B"]);
+				break;				
+			default:
+				finalslots.push(currslot);
+		}
+	}
+	return finalslots;
+}
+ function addCourse(coursename,slots,venue){
+	 eslots=slotexpand(slots);
+	 slotid=coursename+"-"+eslots.join("-");
+	 slotid=slotid.replace(/\s/ig,'-');
+		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue};
+
+	 for (aslot in eslots){
+		 showSlot(eslots[aslot],true);
+		 var $slot=$('.slot-'+eslots[aslot]);
+		 $slot.find('.course-name').html(coursename);
+		 $slot.find('.course-venue').html(venue);
+	 }
+	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td></tr>').appendTo('#listb')
+	 updatePerma()
+	 $("#inputrow input").val("")
+ }
+ 
+
+function updatePerma(){
+	$('#perma').attr('href','?data='+encodeURIComponent(JSON.stringify(courses))+"&slots="+$('#snametog').hasClass('active'));
+}
+ function showSlot(slotname,use){
+	 $('.slot-'+slotname).show();
+	 if(use){$('.slot-'+slotname).addClass('used')}
+	 $('.clashbuddy-'+slotname).show();
+	 $('.slot-clash-'+slotname).hide();
+ }
+ function hideSlot(slotname,unuse){
+
+	 if(unuse){$('.slot-'+slotname).removeClass('used')}
+
+	 if($('.clashbuddy-'+slotname+".used").length==0&&$('.clashbuddy-'+slotname).length!=0){
+		$('.slot-'+slotname).hide();
+		$('.clashbuddy-'+slotname).hide();
+		$('.slot-clash-'+slotname).show();	 		 
+	 }
+
+ }
+ function toggleSlot(){
+ $('#snametog').toggleClass('active')
+	if($('#snametog').hasClass('active')){
+	  $('.slot-name').show();
+	  $('#snametog').html('Hide slot names');
+	}else{
+		$('.slot-name').hide();
+		$('#snametog').html('Show slot names');
+	};
+  $('#snametog').blur();
+  updatePerma();
+  }
+ function getJsonFromUrl() {
+	 //From http://stackoverflow.com/a/8486188/1198729, by user Jan Turon
+  var query = location.search.substr(1);
+  var data = query.split("&");
+  var result = {};
+  for(var i=0; i<data.length; i++) {
+    var item = data[i].split("=");
+    result[item[0]] = item[1];
+  }
+  return result;
+}
+
+ </script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+</head>
+
+<body>
+<script>
+$(document).ready(function(){
+	$('#listb').on('click','.rmslot',function(){
+	var slotid=$(this).data('slotid');
+	 slotid=slotid.replace(/\s/ig,'-');
+	var slots=courses[slotid].slots;
+	for(i in slots){
+		//hideSlot(slots[i],true);
+		var $slot=$('.slot-'+slots[i]);
+		$slot.find('.course-name').html("");
+		$slot.find('.course-venue').html("");
+		
+	}
+	$('#list-'+slotid).remove();
+	delete courses[slotid];
+	updatePerma();
+});
+lspl=getJsonFromUrl();
+if(lspl["data"]&&lspl["data"].length>0){
+	var courses2=JSON.parse(decodeURIComponent(lspl["data"]));
+	for(i in courses2){
+		
+		addCourse(courses2[i].name,courses2[i].slots.join(";"),courses2[i].venue,true);
+	}
+
+}
+if(lspl["slots"]&&lspl["slots"]=="false"){
+
+	toggleSlot();
+}
+	updatePerma();
+	
+	$('#helpicon').popover({"title":"Separate multiple slots with a comma. <br>Slot groups like '4' also allowed","trigger":"hover","html":true,"placement":"bottom"});
+});
+</script>	
+
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<h3>
+				Timetable creator
+			</h3>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-10 column">
+		<div class="row clearfix" id="inputrow">
+		<div class="col-md-2 column"><input type=text class="form-control" id=ccode placeholder="Course code"/></div>
+		<div class="col-md-2 column"><div class="input-group">
+			<span class="input-group-addon"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip"  id="helpicon"></i></span>
+			<input type=text class="form-control" id=cslots placeholder="Slots"/>
+		</div></div>
+		<div class="col-md-2 column"><input type=text class="form-control" id=cvenue placeholder="Venue"/> </i></div>
+		<div class="col-md-1 column"><button class="btn btn-primary" onclick="addCourse($('#ccode').val(),$('#cslots').val(),$('#cvenue').val())">Add</button></div>
+		<div class="col-md-2 column"><button class="btn btn-default togglebtn active" id=snametog onclick="toggleSlot()">Hide slot names</button></div>
+		<div class="col-md-1 column"><a class="btn btn-default" id=perma href>Permalink</a></div>
+		</div>
+		<div class="row">&nbsp;</div> 
+		<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table table-bordered maintbl">
+				<thead>
+					<tr>
+						<th colspan=3 >
+							Time
+						</th>
+						<th>
+							Monday
+						</th>
+						<th>
+							Tuesday
+						</th>
+						<th>
+							Wednesday
+						</th>
+						<th>
+							Thursday
+						</th>
+						<th>
+							Friday
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td class=structtd></td>
+					<td colspan=2 class="tm">
+						8:30-<br>9:25
+					</td>
+					<td class="slot-1 slot-1A"><span class="slot-name">1A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-4 slot-4B"><span class="slot-name">4B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-7 slot-LA"><span class="slot-name">7A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-3 slot-3C"><span class="slot-name">3C</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-7 slot-7B"><span class="slot-name">7B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm>
+						9:30-<br>10:25
+					</td>
+
+					<td class=tm rowspan=2>
+						9:30-<br>10:55
+					</td>
+					<td class="slot-2 slot-2A"><span class="slot-name">2B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-1 slot-1B"><span class="slot-name">1B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-5 slot-5A slot-clash-L5 clashbuddy-6A" rowspan=2><span class="slot-name">5A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-L5  slot-clash-5A slot-clash-6A" style="display:none" rowspan=4><span class="slot-name">L5</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					
+					<td class="slot-4 slot-4C"><span class="slot-name">4C</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-5 slot-5B  slot-clash-L6 clashbuddy-6B" rowspan=2><span class="slot-name">5B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-clash-5B slot-clash-6B slot-L6" style="display:none" rowspan=4><span class="slot-name">L6</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm rowspan=2>
+						10:30-<br>11:25
+					</td>
+					<td class="slot-3 slot-3A" rowspan=2><span class="slot-name">3A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-2 slot-2B" rowspan=2><span class="slot-name">2B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-1 slot-1C" rowspan=2><span class="slot-name">1C</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>	
+
+			
+				<tr>
+					<td class=structtd></td>
+					<td class=tm rowspan=2>
+						11:00-<br>12:25
+					</td>
+					<td class="slot-6 slot-6A slot-clash-L5 clashbuddy-5A" rowspan=2><span class="slot-name">6A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-6 slot-6B slot-clash-L6 clashbuddy-6A" rowspan=2><span class="slot-name">6B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>				
+				<tr>
+					<td class=structtd></td>
+					<td class=tm >
+						11:30-<br>12:25
+					</td>
+					<td class="slot-4 slot-4A"><span class="slot-name">4A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-3 slot-3B"><span class="slot-name">3B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-2 slot-2C"><span class="slot-name">2C</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>		
+				<tr>
+					<td class=structtd></td>
+					<td colspan=2 class=tm>12:30-<br>2:00</td>
+					<td colspan=42 style="text-align:center">KHAAANAA</td>
+				</tr>		
+				<tr>
+					<td class=structtd></td>
+					<td class=tm>2:00-<br>3:00</td>
+					<td class=tm rowspan=2>2:00-<br>3:25</td>
+					<td class="slot-8 slot-8A slot-clash-L1 clashbuddy-9A" rowspan=2><span class="slot-name">8A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-L1 slot-clash-9A slot-clash-8A" style="display:none" rowspan=4><span class="slot-name">L1</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>		
+					<td class="slot-10 slot-10A slot-clash-L2 clashbuddy-11A" rowspan=2><span class="slot-name">10A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-L2  slot-clash-10A slot-clash-11A" style="display:none" rowspan=4><span class="slot-name">L2</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>		
+					<td class="slot-X slot-X1 slot-clash-Lx clashbuddy-X2 clashbuddy-X3" style="display:none"><span class="slot-name">X1</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					
+					<td class="slot-Lx slot-clash-X slot-clash-X1 slot-clash-X2 slot-clash-X3"  rowspan=4><span class="slot-name">Lx</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-8 slot-8B slot-clash-L3 clashbuddy-9B" rowspan=2><span class="slot-name">8B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-L3 slot-clash-8B slot-clash-9B" style="display:none" rowspan=4><span class="slot-name">L3</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>		
+					<td class="slot-10 slot-10B slot-clash-L4 clashbuddy-11B" rowspan=2><span class="slot-name">10B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-L4 slot-clash-10B slot-clash-11B" style="display:none" rowspan=4><span class="slot-name">L4</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>		
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm rowspan=2>3:00-<br>4:00</td>
+					<td class="slot-X slot-X2 slot-clash-Lx clashbuddy-X1 clashbuddy-X3" style="display:none" rowspan=2><span class="slot-name">X2</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm rowspan=2>3:30-<br>4:55</td>
+					<td class="slot-9 slot-9A slot-clash-L1 clashbuddy-8A" rowspan=2><span class="slot-name">9A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-11 slot-11A slot-clash-L2 clashbuddy-10A" rowspan=2><span class="slot-name">11A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					
+					<td class="slot-9 slot-9B slot-clash-L3 clashbuddy-8B" rowspan=2><span class="slot-name">9B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-11 slot-11B slot-clash-L4 clashbuddy-10B" rowspan=2><span class="slot-name">11B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm>4:00-<br>4:55</td>
+					<td class="slot-X slot-X3 slot-clash-Lx  clashbuddy-X2 clashbuddy-X1" style="display:none"><span class="slot-name">X3</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm colspan=2>5:05-<br>6:30</td>
+					<td class="slot-12 slot-12A"><span class="slot-name">12A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-14 slot-14A"><span class="slot-name">14A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-X slot-XC"><span class="slot-name">XC</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-12 slot-12B"><span class="slot-name">12B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-14 slot-14B"><span class="slot-name">14B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>
+				<tr>
+					<td class=structtd></td>
+					<td class=tm colspan=2>6:35-<br>8:00</td>
+					<td class="slot-13 slot-13A"><span class="slot-name">13A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-15 slot-15A"><span class="slot-name">15A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-X slot-XD"><span class="slot-name">XD</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-13 slot-13B"><span class="slot-name">13B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-15 slot-15B"><span class="slot-name">15B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+
+				</tr>
+				
+				
+				</tbody>
+			</table>
+		</div></div>
+		</div>
+		<div class="col-md-2 column">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						
+						<th colspan=2>
+							Course list
+						</th>
+					</tr>
+				</thead>
+				<tbody id="listb">
+
+				
+				
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>
