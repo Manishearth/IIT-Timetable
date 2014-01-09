@@ -63,18 +63,35 @@ function slotexpand(slotnames){
 	return finalslots;
 }
  function addCourse(coursename,slots,venue){
-	 
+
 	 eslots=slotexpand(slots);
 	 
 	 slotid=coursename+"-"+eslots.join("-");
 	 slotid=slotid.replace(/\s/ig,'-');
 		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue};
-
 	 for (aslot in eslots){
-		 showSlot(eslots[aslot],true);
-		 var $slot=$('.slot-'+eslots[aslot]);
-		 $slot.find('.course-name').html(coursename);
-		 $slot.find('.course-venue').html(venue);
+		 eslots[aslot]=new String(eslots[aslot]);
+		if($('.slot-'+eslots[aslot]+'.used').length>0||$('.slot-clash-'+eslots[aslot]+'.used').length>0){
+			 var arr=$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').map(function(){return $(this).find('.slot-name').html()+" ("+$(this).find('.course-name').html()+")"}).get()
+			eslots[aslot].nooverwrite=!confirm("Slot clash of "+eslots[aslot]+" with "+arr.join(", ")+", overwrite other course or cancel this one?");
+			if(!eslots[aslot].nooverwrite){
+				$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').each(function(){$('.rmslot[data-slotid='+$(this).data('slotid')+']').click()});
+			}else{
+				delete courses[slotid]
+				return true;
+			}
+		}
+	 }
+	 
+	 for (aslot in eslots){
+		 console.log(eslots[aslot]+" "+eslots[aslot].overwrite)
+		if(!eslots[aslot].nooverwrite){
+			showSlot(eslots[aslot],true);
+			var $slot=$('.slot-'+eslots[aslot]);
+			$slot.find('.course-name').html(coursename);
+			$slot.find('.course-venue').html(venue);
+			$slot.data('slotid',slotid)
+		}
 	 }
 	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td></tr>').appendTo('#listb')
 	 updatePerma()
@@ -150,7 +167,7 @@ $(document).ready(function(){
 		var $slot=$('.slot-'+slots[i]);
 		$slot.find('.course-name').html("");
 		$slot.find('.course-venue').html("");
-		
+		$slot.removeClass('used');
 	}
 	$('#list-'+slotid).remove();
 	delete courses[slotid];
@@ -244,7 +261,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 					<td class=tm rowspan=2>
 						9:30-<br>10:55
 					</td>
-					<td class="slot-2 slot-2A"><span class="slot-name">2B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
+					<td class="slot-2 slot-2A"><span class="slot-name">2A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
 					<td class="slot-1 slot-1B"><span class="slot-name">1B</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
 					<td class="slot-5 slot-5A slot-clash-L5 clashbuddy-6A" rowspan=2><span class="slot-name">5A</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
 					<td class="slot-L5  slot-clash-5A slot-clash-6A" style="display:none" rowspan=4><span class="slot-name">L5</span><div class="slot-deets"><span class="course-name"></span><div class="course-venue"></div></div></td>
