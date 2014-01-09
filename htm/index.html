@@ -64,12 +64,18 @@ function slotexpand(slotnames){
 	return finalslots;
 }
  function addCourse(coursename,slots,venue){
-
+	
 	 eslots=slotexpand(slots);
 	 
 	 slotid=coursename+"-"+eslots.join("-");
 	 slotid=slotid.replace(/\s/ig,'-');
 		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue};
+	for(aslot in eslots){
+		if($('.slot-'+eslots[aslot]).length<=0){
+			alert("Slot "+eslots[aslot]+" does not exist");
+			return false;
+		}
+	}
 	 for (aslot in eslots){
 		 eslots[aslot]=new String(eslots[aslot]);
 		if($('.slot-'+eslots[aslot]+'.used').length>0||$('.slot-clash-'+eslots[aslot]+'.used').length>0){
