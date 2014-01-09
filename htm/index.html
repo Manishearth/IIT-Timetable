@@ -22,9 +22,9 @@
 
   <!-- Fav and touch icons -->
  <style>
- .tm{font-size:8pt;width:auto;text-align:center;
-    white-space: nowrap; padding:0px !important; }
-    .maintbl td{vertical-align:middle !important; text-align:center;}
+ .tm,.tm2,.structtd{font-size:8pt;width:auto;text-align:center;
+    white-space: nowrap; padding:0px !important; } 
+    .maintbl td:not(.tm):not(.structtd),.maintbl th:not(.tm2){vertical-align:middle !important; text-align:center; width:18%}
   .table>tfoot>tr>td.tm{padding:0px;}
   th{text-align:center; width:0px;padding:0px;}
   .structtd{width:0%;padding:0px !important; border:0px;}
@@ -201,7 +201,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 			<table class="table table-bordered maintbl">
 				<thead>
 					<tr>
-						<th colspan=3 >
+						<th colspan=3 class=tm2>
 							Time
 						</th>
 						<th>
