@@ -199,7 +199,19 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 	updatePerma();
 	
 	$('#helpicon').popover({"title":"Separate multiple slots with a comma. <br>Slot groups like '4' also allowed","trigger":"hover","html":true,"placement":"bottom"});
-	$('.structtd').html('<br><br>')
+	$('.structtd').html('<br><br>');
+
+	$('.maintbl td').dblclick(function () {
+	    var $this = $(this);
+	    if($("#cslots").val()==""){
+	    	$("#cslots").val($this.find("span").first().text());
+	    }
+	    else{
+	    	var text=$("#cslots").val();
+	    	text=text + " , " + $this.find("span").first().text();
+	    	$("#cslots").val(text);
+	    }
+	});
 
 });
 </script>	
