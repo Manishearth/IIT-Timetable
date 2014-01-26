@@ -32,7 +32,8 @@
 background-color: rgba(37, 253, 8, 0.22);
 }
 .used{background-color:rgba(255, 255, 0, 0.36);}
-.dangerRem{background-color:rgba(255, 0, 0, 0.36);}
+.dangerRem{background-color:rgba(255, 0, 0, 0.46);}
+.softDanger{background-color:rgba(255, 0, 0, 0.20);}
  </style>
  <script type="text/javascript">
 	 courses={};
@@ -85,9 +86,10 @@ function slotexpand(slotnames){
 		 eslots[aslot]=new String(eslots[aslot]);
 		if($('.slot-'+eslots[aslot]+'.used').length>0||$('.slot-clash-'+eslots[aslot]+'.used').length>0){
 			 var arr=$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').map(function(){return $(this).find('.slot-name').html()+" ("+$(this).find('.course-name').html()+")"}).get()
+			$('.slot-name').each(function(){if(arr.indexOf(this.textContent)!=-1){$(this).parents(".used").addClass('softDanger')}})
 			$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').addClass('dangerRem')
 			eslots[aslot].nooverwrite=!confirm("Slot clash of "+eslots[aslot]+" with "+arr.join(", ")+", overwrite other course or cancel this one?");
-			$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').removeClass('dangerRem')
+			$('..used').removeClass('dangerRem').removeClass('softDanger')
 			if(!eslots[aslot].nooverwrite){
 				$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').each(function(){$('.rmslot[data-slotid='+$(this).data('slotid')+']').click()});
 			}else{
