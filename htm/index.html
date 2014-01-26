@@ -33,7 +33,7 @@ background-color: rgba(37, 253, 8, 0.22);
 }
 .used{background-color:rgba(255, 255, 0, 0.36);}
 .dangerRem{background-color:rgba(255, 0, 0, 0.46);}
-.softDanger{background-color:rgba(255, 0, 0, 0.20);}
+.softDanger{background-color:rgba(255, 0, 0, 0.20);}pr
  </style>
  <script type="text/javascript">
 	 courses={};
@@ -163,6 +163,9 @@ function updatePerma(){
 
 function printable(){
 	history.pushState({},"",updatePerma())
+	if(confirm("Remove colors?")){
+		$('.used').css('background-color','white')
+	}
 	$('body').html($('.maintbl').parent().html())
 }
 
