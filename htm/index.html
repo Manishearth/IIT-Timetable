@@ -28,6 +28,12 @@
   .table>tfoot>tr>td.tm{padding:0px;}
   th{text-align:center; width:0px;padding:0px;}
   .structtd{width:0%;padding:0px !important; border:0px;}
+  td:hover {
+background-color: rgba(37, 253, 8, 0.22);
+}
+.used{background-color:rgba(255, 255, 0, 0.36);}
+.dangerRem{background-color:rgba(255, 0, 0, 0.46);}
+.softDanger{background-color:rgba(255, 0, 0, 0.20);}pr
  </style>
  <script type="text/javascript">
 	 courses={};
@@ -80,7 +86,11 @@ function slotexpand(slotnames){
 		 eslots[aslot]=new String(eslots[aslot]);
 		if($('.slot-'+eslots[aslot]+'.used').length>0||$('.slot-clash-'+eslots[aslot]+'.used').length>0){
 			 var arr=$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').map(function(){return $(this).find('.slot-name').html()+" ("+$(this).find('.course-name').html()+")"}).get()
+			 var arr2=$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').map(function(){return $(this).find('.course-name').html()}).get()
+			$('.course-name').each(function(){if(arr2.indexOf(this.innerHTML)!=-1){$(this).parents(".used").addClass('softDanger')}})
+			$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').addClass('dangerRem').removeClass("softDanger")
 			eslots[aslot].nooverwrite=!confirm("Slot clash of "+eslots[aslot]+" with "+arr.join(", ")+", overwrite other course or cancel this one?");
+			$('.used').removeClass('dangerRem').removeClass('softDanger')
 			if(!eslots[aslot].nooverwrite){
 				$('.slot-'+eslots[aslot]+'.used,.slot-clash-'+eslots[aslot]+'.used').each(function(){$('.rmslot[data-slotid='+$(this).data('slotid')+']').click()});
 			}else{
@@ -153,6 +163,9 @@ function updatePerma(){
 
 function printable(){
 	history.pushState({},"",updatePerma())
+	if(confirm("Remove colors?")){
+		$('.used').css('background-color','white')
+	}
 	$('body').html($('.maintbl').parent().html())
 }
 
@@ -196,7 +209,19 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 	updatePerma();
 	
 	$('#helpicon').popover({"title":"Separate multiple slots with a comma. <br>Slot groups like '4' also allowed","trigger":"hover","html":true,"placement":"bottom"});
-	$('.structtd').html('<br><br>')
+	$('.structtd').html('<br><br>');
+
+	$('.maintbl td').dblclick(function () {
+	    var $this = $(this);
+	    if($("#cslots").val()==""){
+	    	$("#cslots").val($this.find("span").first().text());
+	    }
+	    else{
+	    	var text=$("#cslots").val();
+	    	text=text + "," + $this.find("span").first().text();
+	    	$("#cslots").val(text);
+	    }
+	});
 
 });
 </script>	
