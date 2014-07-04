@@ -74,7 +74,7 @@ function slotexpand(slotnames){
 	 eslots=slotexpand(slots);
 	 
 	 slotid=coursename+"-"+eslots.join("-");
-	 slotid=slotid.replace(/\s/ig,'-');
+	 slotid=slotid.replace(/[\s\(\)]/ig,'-');
 		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue};
 	for(aslot in eslots){
 		if($('.slot-'+eslots[aslot]).length<=0){
@@ -411,7 +411,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 		</div></div>
 		</div>
 		<div class="col-md-2 column">
-			<button class="btn btn-default form-control"   onclick="printable()">Printable</button><a style="margin-top:2px;margin-bottom:2px" class="btn form-control btn-default input-block-level" id=perma href>Permalink</a>
+			<button class="btn btn-default form-control"  style="z-index:2" onclick="printable()">Printable</button><a style="z-index:2; margin-top:2px;margin-bottom:2px" class="btn form-control btn-default input-block-level" id=perma href>Permalink</a>
 			
 			<table class="table table-striped table-hover">
 				<thead>
