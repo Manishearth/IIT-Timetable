@@ -1,6 +1,8 @@
 IIT-Timetable
 =============
 
-See the timetable generator [here](http://home.iitb.ac.in/~manishg/Stuff/timetable)
+Running [here](home.iitb.ac.in/~manishg/Stuff/timetable/)
 
-Will write more here... someday
+([Alternate link](http://home.iitb.ac.in/~manishg/Stuff/timetable))
+
+Helps generate timetables given course codes and slots without having to dig through IIT Bombay's labyrinthine overlapping slot pattern
