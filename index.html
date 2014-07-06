@@ -32,7 +32,7 @@
   td:hover {
 background-color: rgba(37, 253, 8, 0.22);
 }
-.used{background-color:rgba(255, 255, 0, 0.36);}
+.used{}
 .dangerRem{background-color:rgba(255, 0, 0, 0.46);}
 .softDanger{background-color:rgba(255, 0, 0, 0.20);}
  </style>
@@ -104,7 +104,7 @@ function slotexpand(slotnames){
 	 for (aslot in eslots){
 		 console.log(eslots[aslot]+" "+eslots[aslot].overwrite)
 		if(!eslots[aslot].nooverwrite){
-			showSlot(eslots[aslot],true);
+			showSlot(eslots[aslot],true,color);
 			var $slot=$('.slot-'+eslots[aslot]);
 			$slot.find('.course-name').html(coursename);
 			$slot.find('.course-venue').html(venue);
@@ -121,9 +121,10 @@ function updatePerma(){
 	$('#perma').attr('href','?data='+encodeURIComponent(JSON.stringify(courses))+"&slots="+$('#snametog').hasClass('active'));
 	return $('#perma').attr('href');
 }
- function showSlot(slotname,use){
+ function showSlot(slotname,use,color){
 	 $('.slot-'+slotname).show();
-	 if(use){$('.slot-'+slotname).addClass('used')}
+	 if(use){$('.slot-'+slotname).attr('style', 'background-color:'+color+' !important')
+                               .addClass('used');}
 	 $('.clashbuddy-'+slotname).show();
 	 $('.slot-clash-'+slotname).hide();
  }
@@ -212,7 +213,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 	
 	$('#helpicon').popover({"title":"Separate multiple slots with a comma. <br>Slot groups like '4' also allowed","trigger":"hover","html":true,"placement":"bottom"});
 	$('.structtd').html('<br><br>');
-  $('.picker').colorpicker();
+  $('.picker').colorpicker({format: "rgb"});
 	$('.maintbl td').dblclick(function () {
 	    var $this = $(this);
 	    if($("#cslots").val()==""){
