@@ -70,13 +70,13 @@ function slotexpand(slotnames){
 	}
 	return finalslots;
 }
- function addCourse(coursename,slots,venue){
+ function addCourse(coursename,slots,venue,color){
 	
 	 eslots=slotexpand(slots);
 	 
 	 slotid=coursename+"-"+eslots.join("-");
 	 slotid="i-"+slotid.replace(/[^A-Za-z0-9\-\_\:\.]/ig,'-');
-		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue};
+		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue, "color" : color};
 	for(aslot in eslots){
 		if($('.slot-'+eslots[aslot]).length<=0){
 			alert("Slot "+eslots[aslot]+" does not exist");
@@ -250,7 +250,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
         <input type="text" placeholder="BG color" id=color value="" class="form-control" />
         <span class="input-group-addon"><i></i></span>
     </div>
-		<div class="col-md-1 column"><button class="btn btn-primary" onclick="addCourse($('#ccode').val(),$('#cslots').val(),$('#cvenue').val())">Add</button></div>
+		<div class="col-md-1 column"><button class="btn btn-primary" onclick="addCourse($('#ccode').val(),$('#cslots').val(),$('#cvenue').val(), $('#color').val())">Add</button></div>
 		<div class="col-md-2 column"><button class="btn btn-default togglebtn active" id=snametog onclick="toggleSlot()">Hide slot names</button></div>
 
 		</div>
