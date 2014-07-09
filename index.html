@@ -76,7 +76,7 @@ function slotexpand(slotnames){
 	 
 	 slotid=coursename+"-"+eslots.join("-");
 	 slotid="i-"+slotid.replace(/[^A-Za-z0-9\-\_\:\.]/ig,'-');
-		courses[slotid]={"name":coursename,"slots":eslots,"venue":venue, "color" : color};
+	courses[slotid]={"name":coursename,"slots":eslots,"venue":venue, "color" : color};
 	for(aslot in eslots){
 		if($('.slot-'+eslots[aslot]).length<=0){
 			alert("Slot "+eslots[aslot]+" does not exist");
@@ -111,8 +111,17 @@ function slotexpand(slotnames){
 			$slot.data('slotid',slotid)
 		}
 	 }
-	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td><td class="list-'+slotid+'"><input type="hidden" placeholder="BG color" id=color value="' + color + '" class="form-control" /><span class="input-group-addon"><i></i></span></td></tr>').appendTo('#listb')
-	 $('.list-' + slotid).colorpicker({format: "rgb"});
+	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td><td class="list-'+slotid+'"><input type="hidden" placeholder="BG color" id="list-color-'+slotid+'" value="' + color + '" class="form-control" /><span class="input-group-addon"><i></i></span></td></tr>').appendTo('#listb')
+
+	$('.list-' + slotid).colorpicker({format: "rgb"}).on('changeColor', function(ev){
+		courses[slotid].color = $('#list-color-'+slotid).val();
+		for (aslot in eslots){
+			if(!eslots[aslot].nooverwrite){
+				$('.slot-'+eslots[aslot]).attr('style', 'background-color:'+$('#list-color-'+slotid).val()+' !important');
+			}
+		 }
+		 updatePerma()
+	});
 	 updatePerma()
 	 $("#inputrow input").val("")
  }
@@ -131,7 +140,8 @@ function updatePerma(){
  }
  function hideSlot(slotname,unuse){
 
-	 if(unuse){$('.slot-'+slotname).removeClass('used')}
+	 if(unuse){$('.slot-'+slotname).removeClass('used')
+			                           .attr('style', 'background-color:white !important');}
 
 	 if($('.clashbuddy-'+slotname+".used").length==0&&$('.clashbuddy-'+slotname).length!=0){
 		$('.slot-'+slotname).hide();
@@ -194,6 +204,7 @@ $(document).ready(function(){
 		$slot.removeClass('used');
 		$slot.attr('style', 'background-color:white !important')
 	}
+  $('.list-' + slotid).colorpicker('destroy');
 	$('#list-'+slotid).remove();
 	delete courses[slotid];
 	updatePerma();
@@ -203,7 +214,7 @@ if(lspl["data"]&&lspl["data"].length>0){
 	var courses2=JSON.parse(decodeURIComponent(lspl["data"]));
 	for(i in courses2){
 		
-		addCourse(courses2[i].name,courses2[i].slots.join(";"),courses2[i].venue,true);
+		addCourse(courses2[i].name,courses2[i].slots.join(";"),courses2[i].venue,courses2[i].color);
 	}
 
 }
@@ -248,7 +259,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 			<span class="input-group-addon"><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip"  id="helpicon"></i></span>
 			<input type=text class="form-control" id=cslots placeholder="Slots"/>
 		</div></div>
-		<div class="col-md-2 column"><input type=text class="form-control" id=cvenue placeholder="Venue"/> </i></div>
+		<div class="col-md-2 column"><input type=text class="form-control" id=cvenue placeholder="Venue"/></div>
     <div class="col-md-2 column input-group picker">
         <input type="text" placeholder="BG color" id=color value="" class="form-control" />
         <span class="input-group-addon"><i></i></span>
