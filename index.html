@@ -13,7 +13,7 @@
 	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
 	
 	<link href="css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    <link href="css/bootstrap-colorpicker.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -111,7 +111,8 @@ function slotexpand(slotnames){
 			$slot.data('slotid',slotid)
 		}
 	 }
-	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td></tr>').appendTo('#listb')
+	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td><td class="list-'+slotid+'"><input type="hidden" placeholder="BG color" id=color value="' + color + '" class="form-control" /><span class="input-group-addon"><i></i></span></td></tr>').appendTo('#listb')
+	 $('.list-' + slotid).colorpicker({format: "rgb"});
 	 updatePerma()
 	 $("#inputrow input").val("")
  }
@@ -191,6 +192,7 @@ $(document).ready(function(){
 		$slot.find('.course-name').html("");
 		$slot.find('.course-venue').html("");
 		$slot.removeClass('used');
+		$slot.attr('style', 'background-color:white !important')
 	}
 	$('#list-'+slotid).remove();
 	delete courses[slotid];
