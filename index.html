@@ -217,7 +217,9 @@ lspl=getJsonFromUrl();
 if(lspl["data"]&&lspl["data"].length>0){
 	var courses2=JSON.parse(decodeURIComponent(lspl["data"]));
 	for(i in courses2){
-		
+		if (!courses2[i].color) {
+			courses2[i].color = "rgba(255, 255, 0, 0.36)";
+		}
 		addCourse(courses2[i].name,courses2[i].slots.join(";"),courses2[i].venue,courses2[i].color);
 	}
 
