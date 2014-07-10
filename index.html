@@ -111,9 +111,9 @@ function slotexpand(slotnames){
 			$slot.data('slotid',slotid)
 		}
 	 }
-	 $('<tr id="list-'+slotid+'"><td><button type="button" class="btn btn-default  btn-xs list-'+slotid+' "><span class="glyphicon glyphicon-pencil"></span></button></td><td id="list-name-'+slotid+'">'+coursename+'</td><td><button class="rmslot  btn-xs btn btn btn-danger" data-slotid="'+slotid+'">x</button></td></tr>').appendTo('#listb')
-	$('#list-name-' + slotid).attr('style', 'background-color:'+color+' !important');
-	$('.list-' + slotid).colorpicker({format: "rgba"}).on('changeColor', function(ev){
+	 $('<tr id="list-'+slotid+'"><td><button type="button" class="btn btn-default btn-xs list-'+slotid+' " id="color-button-'+slotid+'"><span class="glyphicon glyphicon-pencil"></span></button></td><td id="list-name-'+slotid+'">'+coursename+'</td><td><button class="rmslot  btn-xs btn btn btn-danger" data-slotid="'+slotid+'">x</button></td></tr>').appendTo('#listb')
+	$('#color-button-' + slotid).attr('style', 'background-color:'+color+' !important')
+	.colorpicker({format: "rgba", color:color}).on('changeColor', function(ev){
 		var rgbc = ev.color.toRGB();
 		var rgbc_str = "rgba("+rgbc.r + "," + rgbc.g + "," + rgbc.b + ",0.36)";
 		courses[slotid].color = rgbc_str;
@@ -123,7 +123,7 @@ function slotexpand(slotnames){
 			}
 		 }
 		 updatePerma()
-		 $('#list-name-' + slotid).attr('style', 'background-color:'+rgbc_str+' !important');
+		 $('#color-button-' + slotid).attr('style', 'background-color:'+rgbc_str+' !important');
 	});
 	 updatePerma()
 	 $("#inputrow input").val("");
