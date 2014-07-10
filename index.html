@@ -71,7 +71,7 @@ function slotexpand(slotnames){
 	return finalslots;
 }
  function addCourse(coursename,slots,venue,color){
-	
+	 console.log(color);
 	 eslots=slotexpand(slots);
 	 
 	 slotid=coursename+"-"+eslots.join("-");
@@ -114,16 +114,19 @@ function slotexpand(slotnames){
 	 $('<tr id="list-'+slotid+'"><td><button class="rmslot btn btn-xs btn-danger" data-slotid="'+slotid+'">x</button></td><td>'+coursename+'</td><td class="list-'+slotid+'"><input type="hidden" placeholder="BG color" id="list-color-'+slotid+'" value="' + color + '" class="form-control" /><span class="input-group-addon"><i></i></span></td></tr>').appendTo('#listb')
 
 	$('.list-' + slotid).colorpicker({format: "rgb"}).on('changeColor', function(ev){
-		courses[slotid].color = $('#list-color-'+slotid).val();
+		var rgbc = ev.color.toRGB();
+		var rgbc_str = "rgba("+rgbc.r + "," + rgbc.g + "," + rgbc.b + ",0.36)";
+		courses[slotid].color = rgbc_str;
 		for (aslot in eslots){
 			if(!eslots[aslot].nooverwrite){
-				$('.slot-'+eslots[aslot]).attr('style', 'background-color:'+$('#list-color-'+slotid).val()+' !important');
+				$('.slot-'+eslots[aslot]).attr('style', 'background-color:'+rgbc_str+' !important');
 			}
 		 }
 		 updatePerma()
 	});
 	 updatePerma()
-	 $("#inputrow input").val("")
+	 $("#inputrow input").val("");
+	 $("#color").val("rgba(255, 255, 0, 0.36)"); // the previous used default color
  }
  
 
@@ -226,7 +229,13 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 	
 	$('#helpicon').popover({"title":"Separate multiple slots with a comma. <br>Slot groups like '4' also allowed","trigger":"hover","html":true,"placement":"bottom"});
 	$('.structtd').html('<br><br>');
-  $('.picker').colorpicker({format: "rgb"});
+  $('.picker').colorpicker({format: "rgba"}).on('changeColor', function(ev){
+		var ev_rgb = ev.color.toRGB();
+		var alpha = ev_rgb.a
+		if (alpha === 1) { alpha = 0.36; }
+		var ev_str = "rgba("+ev_rgb.r+","+ev_rgb.g+","+ev_rgb.b+","+alpha+")";
+		$("#color").val(ev_str);
+	});
 	$('.maintbl td').dblclick(function () {
 	    var $this = $(this);
 	    if($("#cslots").val()==""){
@@ -261,7 +270,7 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 		</div></div>
 		<div class="col-md-2 column"><input type=text class="form-control" id=cvenue placeholder="Venue"/></div>
     <div class="col-md-2 column input-group picker">
-        <input type="text" placeholder="BG color" id=color value="" class="form-control" />
+        <input type="text" placeholder="BG color" id=color value="rgba(255, 255, 0, 0.36)" class="form-control" />
         <span class="input-group-addon"><i></i></span>
     </div>
 		<div class="col-md-1 column"><button class="btn btn-primary" onclick="addCourse($('#ccode').val(),$('#cslots').val(),$('#cvenue').val(), $('#color').val())">Add</button></div>
