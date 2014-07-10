@@ -115,7 +115,8 @@ function slotexpand(slotnames){
 	$('#list-name-' + slotid).attr('style', 'background-color:'+color+' !important');
 	$('.list-' + slotid).colorpicker({format: "rgba"}).on('changeColor', function(ev){
 		var rgbc = ev.color.toRGB();
-		var rgbc_str = "rgba("+rgbc.r + "," + rgbc.g + "," + rgbc.b + ",0.36)";
+		if (rgbc.a === 1) { rgbc.a = 0.36; }
+		var rgbc_str = "rgba("+rgbc.r + "," + rgbc.g + "," + rgbc.b + "," + rgbc.a + ")";
 		courses[slotid].color = rgbc_str;
 		for (aslot in eslots){
 			if(!eslots[aslot].nooverwrite){
