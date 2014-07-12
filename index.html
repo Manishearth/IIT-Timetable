@@ -126,8 +126,8 @@ function slotexpand(slotnames){
 		 $('#color-button-' + slotid).attr('style', 'background-color:'+rgbc_str+' !important');
 	});
 	 updatePerma()
-	 $("#inputrow input").val("");
-	 $("#color").val("rgba(255, 255, 0, 0.36)"); // the previous used default color
+	 $("#inputrow input:not(#color)").val("");
+	 // $("#color").val("rgba(255, 255, 0, 0.36)"); // the previous used default color
  }
  
 
