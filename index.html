@@ -127,12 +127,13 @@ function slotexpand(slotnames){
 	});
 	 updatePerma()
 	 $("#inputrow input:not(#color)").val("");
-	 // $("#color").val("rgba(255, 255, 0, 0.36)"); // the previous used default color
+	 // 	$("#color").val("rgba(255, 255, 0, 0.36)"); // the previous used default color
  }
  
 
 function updatePerma(){
-	$('#perma').attr('href','?data='+encodeURIComponent(JSON.stringify(courses))+"&slots="+$('#snametog').hasClass('active'));
+	//$('#perma').attr('href','?data='+encodeURIComponent(JSON.stringify(courses))+"&slots="+$('#snametog').hasClass('active'));
+	$('#perma').attr('href','?timetable='+encodeURIComponent(btoa(JSON.stringify(courses)))+"&slots="+$('#snametog').hasClass('active'));
 	return $('#perma').attr('href');
 }
  function showSlot(slotname,use,color){
@@ -216,6 +217,16 @@ $(document).ready(function(){
 lspl=getJsonFromUrl();
 if(lspl["data"]&&lspl["data"].length>0){
 	var courses2=JSON.parse(decodeURIComponent(lspl["data"]));
+	for(i in courses2){
+		if (!courses2[i].color) {
+			courses2[i].color = "rgba(255, 255, 0, 0.36)";
+		}
+		addCourse(courses2[i].name,courses2[i].slots.join(";"),courses2[i].venue,courses2[i].color);
+	}
+
+}
+if(lspl["timetable"]&&lspl["timetable"].length>0){
+	var courses2=JSON.parse(atob(decodeURIComponent(lspl["timetable"])));
 	for(i in courses2){
 		if (!courses2[i].color) {
 			courses2[i].color = "rgba(255, 255, 0, 0.36)";
