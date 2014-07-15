@@ -7,21 +7,12 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
-	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
-	<!--script src="js/less-1.3.3.min.js"></script-->
-	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
 	
 	<link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-colorpicker.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 
-  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-    <script src="js/html5shiv.js"></script>
-  <![endif]-->
 
-  <!-- Fav and touch icons -->
  <style>
  .tm,.tm2,.structtd{font-size:8pt;width:auto;text-align:center;
     white-space: nowrap; padding:0px !important; } 
@@ -132,7 +123,6 @@ function slotexpand(slotnames){
  
 
 function updatePerma(){
-	//$('#perma').attr('href','?data='+encodeURIComponent(JSON.stringify(courses))+"&slots="+$('#snametog').hasClass('active'));
 	$('#perma').attr('href','?timetable='+encodeURIComponent(btoa(JSON.stringify(courses)))+"&slots="+$('#snametog').hasClass('active'));
 	return $('#perma').attr('href');
 }
