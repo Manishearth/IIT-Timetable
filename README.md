@@ -1,7 +1,7 @@
 IIT-Timetable
 =============
 
-Running [here](home.iitb.ac.in/~manishg/Stuff/timetable/)
+Running [here](http://manishearth.anapnea.net/timetable/)
 
 ([Alternate link](http://home.iitb.ac.in/~manishg/Stuff/timetable))
 
