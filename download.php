@@ -24,18 +24,18 @@ for($i = 0;$i<$num;$i++)
 		if($data_slot[$i]==$slot->name)
 		{
 			$codeICS .= 'BEGIN:VEVENT';
-			$codeICS .= 'DESCRIPTION:'.$data_course[$i].'\r\n'; //course name
+			$codeICS .= 'DESCRIPTION:'.$data_course[$i]."\r\n"; //course name
 			$day = $slot->day;
 			if($day=='MO'){$date = '20140721';}
 			else if($day=='TU'){$date = '20140722';}
 			else if($day=='WE'){$date = '20140723';}
 			else if($day=='TH'){$date = '20140724';}
 			else if($day=='FR'){$date = '20140725';}
-			$codeICS .= 'DTEND:'.$date.'T'.$slot->timeend.'\r\n'; //end time
-			$codeICS .= 'DTSTART:'.$date.'T'.$slot->timestart.'\r\n'; //start time
-			$codeICS .= 'LOCATION:'.$data_venue[$i].'\r\n'; //location
-			$codeICS .= 'RRULE:FREQ=WEEKLY;UNTIL='.$finaldate.';BYDAY='.$day.'\r\n'; //repeat rule, until end of semester
-			$codeICS .= 'END:VEVENT\r\n\r\n'; //end event
+			$codeICS .= 'DTEND:'.$date.'T'.$slot->timeend."\r\n"; //end time
+			$codeICS .= 'DTSTART:'.$date.'T'.$slot->timestart."\r\n"; //start time
+			$codeICS .= 'LOCATION:'.$data_venue[$i]."\r\n"; //location
+			$codeICS .= 'RRULE:FREQ=WEEKLY;UNTIL='.$finaldate.';BYDAY='.$day."\r\n"; //repeat rule, until end of semester
+			$codeICS .= "END:VEVENT\r\n\r\n"; //end event
 		}
 	}
 }
