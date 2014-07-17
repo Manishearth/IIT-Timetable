@@ -178,21 +178,56 @@ function printable(){
 	$('body').html($('.maintbl').parent().html())
 }
 
+var ICSevents = '';
+
+function addICSEvent(slot,venue,course)
+{
+	var day,date;
+	var finaldate = '20141107T060000Z'; //November 7 is last day of instruction for Autumn Semester 2014-15
+	$.ajax({
+        type: "GET" ,
+		async: false,
+        url: "data.xml" ,
+        dataType: "xml" ,
+        success: function(xml) {
+			$(xml).find('slot').each(function(){
+			if($(this).find('name').text()==slot)
+			{
+				ICSevents += 'BEGIN:VEVENT<br />SUMMARY:Class<br/>';
+				day = $(this).find('day').text();
+				if(day=='MO'){date = '20140721';}
+				else if(day=='TU'){date = '20140722';}
+				else if(day=='WE'){date = '20140723';}
+				else if(day=='TH'){date = '20140724';}
+				else if(day=='FR'){date = '20140725';}
+				ICSevents+= 'DTEND:'+date+'T'+$(this).find('timeend').text()+'<br />';
+				ICSevents+= 'DTSTART:'+date+'T'+$(this).find('timestart').text()+'<br />';
+				ICSevents+= 'LOCATION:'+venue+'<br />';
+				ICSevents+= 'DESCRIPTION:'+course+'<br />';
+				ICSevents+= 'RRULE:FREQ=WEEKLY;UNTIL='+finaldate+';BYDAY='+day+'<br/>';
+				ICSevents+='END:VEVENT<br /><br />';
+			}
+			});
+        }
+    });
+}
+
 function validateICS()
 {
-	$('#icsForm').html(''); //clean
 	$('.maintbl').find('td').each(function(){
 	if($(this).hasClass("used"))
 	{
 		var slot = $(this).find('.slot-name').text();
 		var venue = $(this).find('.course-venue').text();
 		var course = $(this).find('.course-name').text();
-		$('<input type = "hidden" name = "slot[]" value = "'+slot+'" />').appendTo($('#icsForm'));
-		$('<input type = "hidden" name = "venue[]" value = "'+venue+'" />').appendTo($('#icsForm'));
-		$('<input type = "hidden" name = "course[]" value = "'+course+'" />').appendTo($('#icsForm'));
+		addICSEvent(slot,venue,course);
 	}
 	});
-	$('#icsForm').submit();
+	var ICScode = 'BEGIN:VCALENDAR<br />VERSION:2.0<br />CALSCALE:GREGORIAN<br />METHOD:PUBLISH<br /><br />';
+	ICScode += ICSevents;
+	ICScode += 'END:VCALENDAR';
+	$('#codeICS').val(ICScode);
+	document.icsForm.submit();
 }
 
  </script>
@@ -465,8 +500,9 @@ if(lspl["slots"]&&lspl["slots"]=="false"){
 		<div class="col-md-2 column"><br><br><br><br>
 			<button class="btn btn-default form-control"  style="z-index:2" onclick="printable()">Printable</button>
 			<a style="z-index:2; margin-top:2px;margin-bottom:2px" class="btn form-control btn-default input-block-level" id=perma href>Permalink</a>
-			<button class="btn btn-default form-control"  style="z-index:2" onclick = "validateICS()">Export as .ics</button>
-			<form id = "icsForm" name = icsForm" target = "_blank" method = "POST" action = "download.php">
+			<form name = icsForm" target = "_blank" method = "POST" action = "download.php">
+				<input id = "codeICS" type = "hidden" name = "codeICS" value = "" />
+				<button class="btn btn-default form-control"  style="z-index:2" onclick = "validateICS()">Export as .ics</button>
 			</form>
 			
 			<table class="table table-striped table-hover">
