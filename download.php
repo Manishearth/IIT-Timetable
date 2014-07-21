@@ -23,8 +23,8 @@ for($i = 0;$i<$num;$i++)
 	{
 		if($data_slot[$i]==$slot->name)
 		{
-			$codeICS .= 'BEGIN:VEVENT';
-			$codeICS .= 'DESCRIPTION:'.$data_course[$i]."\r\n"; //course name
+			$codeICS .= 'BEGIN:VEVENT'."\r\n";
+			$codeICS .= 'SUMMARY:'.$data_course[$i]."\r\n"; //course name
 			$day = $slot->day;
 			if($day=='MO'){$date = '20140721';}
 			else if($day=='TU'){$date = '20140722';}
