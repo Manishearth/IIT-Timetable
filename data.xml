@@ -38,15 +38,15 @@
   </slot>
   <slot>
 	<name>12A</name>
-	<timestart>170500</timestart>
-	<timeend>183000</timeend>
-	<day>MO</day>
+	<timestart>173500</timestart>
+	<timeend>190000</timeend>
+	<day>TH</day>
   </slot>
   <slot>
 	<name>13A</name>
-	<timestart>183500</timestart>
-	<timeend>200000</timeend>
-	<day>MO</day>
+	<timestart>190500</timestart>
+	<timeend>203000</timeend>
+	<day>FR</day>
   </slot>
   <slot>
 	<name>4B</name>
@@ -86,15 +86,15 @@
   </slot>
   <slot>
 	<name>14A</name>
-	<timestart>170500</timestart>
-	<timeend>183000</timeend>
-	<day>TU</day>
+	<timestart>173500</timestart>
+	<timeend>190000</timeend>
+	<day>TH</day>
   </slot>
   <slot>
 	<name>15A</name>
-	<timestart>183500</timestart>
-	<timeend>200000</timeend>
-	<day>TU</day>
+	<timestart>190500</timestart>
+	<timeend>203000</timeend>
+	<day>FR</day>
   </slot>
   <slot>
 	<name>3C</name>
@@ -134,15 +134,15 @@
   </slot>
   <slot>
 	<name>12B</name>
-	<timestart>170500</timestart>
-	<timeend>183000</timeend>
+	<timestart>173500</timestart>
+	<timeend>190000</timeend>
 	<day>TH</day>
   </slot>
   <slot>
 	<name>13B</name>
-	<timestart>183500</timestart>
-	<timeend>200000</timeend>
-	<day>TH</day>
+	<timestart>190500</timestart>
+	<timeend>203000</timeend>
+	<day>FR</day>
   </slot>
     <slot>
 	<name>7B</name>
@@ -176,14 +176,14 @@
   </slot>
   <slot>
 	<name>14B</name>
-	<timestart>170500</timestart>
-	<timeend>183000</timeend>
-	<day>FR</day>
+	<timestart>173500</timestart>
+	<timeend>190000</timeend>
+	<day>TH</day>
   </slot>
   <slot>
 	<name>15B</name>
-	<timestart>183500</timestart>
-	<timeend>200000</timeend>
+	<timestart>190500</timestart>
+	<timeend>203000</timeend>
 	<day>FR</day>
   </slot>
   <slot>
